@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 expenses = File.readlines('input.txt').map(&:to_i)
 
 def find_two(expenses)
