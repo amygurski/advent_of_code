@@ -89,4 +89,4 @@ To find the encryption weakness, add together the smallest and largest number in
 
 What is the encryption weakness in your XMAS-encrypted list of numbers?
 
-### Solution: ``
+### Solution: `The encryption weakness is 31580383.`
