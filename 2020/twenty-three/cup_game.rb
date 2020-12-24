@@ -1,5 +1,9 @@
-class CupGame
+# frozen_string_literal: true
 
+# Cup Game involving cups arranged in a circle
+# They get mixed up over multiple turns and
+# we predict where they will end up.
+class CupGame
   attr_accessor :input
 
   def initialize(input)
@@ -8,49 +12,57 @@ class CupGame
   end
 
   def play_game
-    10.times do
-      puts "Cups is #{@cups}"
+    100.times do |i|
+      puts "--- move #{i} ---"
+      puts "cups: #{@cups}"
       make_move
     end
-    @cups
+    puts "-- final --\ncups: #{@cups}\n\n"
+    final_cup_order
   end
+
+  private
 
   def make_move
     picked_up_cups = pick_up
-    puts "Picked up cups: #{picked_up_cups}"
+    puts "pick up: #{picked_up_cups}"
     destination_cup = get_destination_cup(picked_up_cups)
-    puts "Destination cup: #{destination_cup}"
+    puts "destination: #{destination_cup}\n\n"
     insert_cups(destination_cup, picked_up_cups)
-    get_current_cup
-    puts "New Current cupt is #{@current_cup}"
+    current_cup
   end
 
-  def get_current_cup
+  def current_cup
     start_index = @cups.index(@current_cup) + 1
     @current_cup = @cups.rotate(start_index)[0]
   end
 
   def pick_up
     start_index = @cups.index(@current_cup) + 1
-    pick_up = @cups.rotate(start_index)[0..2]
+    @cups.rotate(start_index)[0..2]
   end
 
   def get_destination_cup(pick_up)
-    possible_destinations = @cups.reject {|v| pick_up.any?(v)}
+    possible_destinations = @cups.reject { |v| pick_up.any?(v) }
     smaller_numbers = possible_destinations.find_all { |v| v <= (@current_cup - 1) }
-    if smaller_numbers.empty?
-      destination_cup = possible_destinations.max 
-    else
-      destination_cup = smaller_numbers.max
-    end
+    destination_cup = if smaller_numbers.empty?
+                        possible_destinations.max
+                      else
+                        smaller_numbers.max
+                      end
     destination_cup
   end
 
   def insert_cups(destination_cup, cups_to_insert)
-    @cups.reject! {|v| cups_to_insert.any?(v)}
+    @cups.reject! { |v| cups_to_insert.any?(v) }
     insert_index = @cups.index(destination_cup) + 1
-    #destination_index = @cups.find_index{ |i| i == destination_cup } + 1
-    puts "Insert index: #{insert_index}"
     @cups.insert(insert_index, cups_to_insert).flatten!
+  end
+
+  def final_cup_order
+    after_one = @cups.slice(@cups.index(1) + 1, @cups.length)
+    before_one = @cups.slice(0, @cups.index(1))
+    order = after_one.concat before_one
+    puts "The order after cup 1 is #{order.join}."
   end
 end
